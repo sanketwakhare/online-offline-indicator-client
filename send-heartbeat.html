@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Heartbeat</title>
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <script>
+        async function sendHeartbeat() {
+            const userId = document.getElementById('userId').value;
+            fetch('http://localhost:3000/heartbeat?userId=' + userId + '&last_activity=' + Date.now(), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                mode: 'no-cors',
+                body: JSON.stringify({
+                    'last_activity': Date.now()
+                })
+            }).then((response) => {
+                console.log(response);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+    </script>
+    <input type="text" name="userId" id="userId" required />
+    <button type="submit" onclick="sendHeartbeat()">Send Heartbeat</button>
+</body>
+
+</html>

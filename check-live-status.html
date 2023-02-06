@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Live status</title>
+    <script src="index.js"></script>
+</head>
+
+<body>
+    <script>
+        let data;
+        setInterval(function () {
+            fetch('http://localhost:3000/live-status', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }).then((res) => {
+                res.json().then((response) => {
+                    data = response;
+                    show(data);
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        }, 2000);
+
+        // Show details
+        function show(data) {
+            let tab = '';
+            // Loop to access all rows 
+            const now_time = new Date().getTime();
+            for (let user in data) {
+                const hb_time = Number(data[user]);
+                const diff = (now_time - hb_time);
+                const secondsSinceEpoch = Math.round(diff / 1000)
+                const lastActiveTimeInMinutes = Math.round(secondsSinceEpoch / 60);
+                tab += `<div>${user} is ${lastActiveTimeInMinutes > 1 ? 'offline' : 'online'}. 
+                    Last active ${lastActiveTimeInMinutes} minutes ago </div>`;
+            }
+            // Setting innerHTML as tab variable
+            document.getElementById("results").innerHTML = tab;
+        }
+    </script>
+</body>
+<div id="results"></div>
+
+</html>
