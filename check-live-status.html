@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Check Live status</title>
     <script src="index.js"></script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -37,9 +38,22 @@
                 const hb_time = Number(data[user]);
                 const diff = (now_time - hb_time);
                 const secondsSinceEpoch = Math.round(diff / 1000)
-                const lastActiveTimeInMinutes = Math.round(secondsSinceEpoch / 60);
-                tab += `<div>${user} is ${lastActiveTimeInMinutes > 1 ? 'offline' : 'online'}. 
-                    Last active ${lastActiveTimeInMinutes} minutes ago </div>`;
+                let lastActiveTime = Math.round(secondsSinceEpoch / 60);
+                let lastActiveTimeInHours = 0;
+                let lastActiveTimeInDays = 0;
+                let time_section = 'minutes';
+                if (lastActiveTime > 30) {
+                    lastActiveTimeInHours = Math.round(lastActiveTime / 60);
+                    lastActiveTime = lastActiveTimeInHours;
+                    time_section = 'hours'
+                }
+                if (lastActiveTimeInHours > 24) {
+                    lastActiveTimeInDays = Math.round(lastActiveTimeInHours / 24);
+                    lastActiveTime = lastActiveTimeInDays;
+                    time_section = 'days'
+                }
+                tab += `<div>${user} is ${lastActiveTime > 1 ? '<b class="red">offline</b>' : '<b class="green">online</b>'}. 
+                    Last active ${lastActiveTime} ${time_section} ago </div>`;
             }
             // Setting innerHTML as tab variable
             document.getElementById("results").innerHTML = tab;
